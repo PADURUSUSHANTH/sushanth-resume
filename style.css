@@ -1,69 +1,68 @@
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Orbitron", sans-serif;
 }
 
 body {
     background: black;
-    color: #00ffe7;
+    color: white;
+    font-family: "Courier New", monospace;
     overflow-x: hidden;
 }
 
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-}
-
+/* Each slide is full screen */
 .section {
     height: 100vh;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    padding: 50px;
+    scroll-snap-align: start;
 }
 
-.glow {
+/* Snap scrolling */
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+/* Section example styling */
+.home, .about {
+    background: #000;
     font-size: 3rem;
-    text-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7;
+    letter-spacing: 4px;
 }
 
-.box {
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    margin: 15px;
-    border-radius: 10px;
-    width: 60%;
-    backdrop-filter: blur(5px);
+/* 🔥 Binary slide styles */
+#binary-slide {
+    background: black;
 }
 
-.nav-dots {
-    position: fixed;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.nav-dots a {
-    display: block;
-    width: 10px;
-    height: 10px;
-    border: 2px solid #00ffe7;
-    border-radius: 50%;
-    margin: 10px;
-    transition: 0.3s;
-}
-.nav-dots a:hover {
-    background: #00ffe7;
-}
-
-.links a {
-    margin: 10px;
-    text-decoration: none;
+#binary-block {
     color: #00ffe7;
-    font-size: 1.3rem;
+    font-size: 22px;
+    font-weight: bold;
+    white-space: pre;
+    letter-spacing: 2px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+}
+
+/* Fall apart animation */
+.fall {
+    animation: fallApart 2.5s forwards ease-in-out;
+}
+
+@keyframes fallApart {
+    0% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(350px);
+        opacity: 0;
+        filter: blur(5px);
+    }
 }
