@@ -1,52 +1,43 @@
-/* Typing animation for tagline */
-document.addEventListener("DOMContentLoaded", () => {
-  const tagline = document.querySelector(".tagline");
-  const text = tagline.textContent;
-  tagline.textContent = "";
-  let i = 0;
-
-  function type() {
-    if (i < text.length) {
-      tagline.textContent += text.charAt(i);
-      i++;
-      setTimeout(type, 60);
-    }
-  }
-  type();
-});
-
-/* Binary Matrix Rain Effect */
-const canvas = document.getElementById("matrixRain");
+const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
-canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-let binary = "01010110010101011010010101";
-binary = binary.split("");
+let particles = [];
 
-let fontSize = 16;
-let columns = canvas.width / fontSize;
-
-let drops = [];
-for (let x = 0; x < columns; x++) drops[x] = 1;
-
-function draw() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = "#00ff88";
-  ctx.font = fontSize + "px Courier";
-
-  for (let i = 0; i < drops.length; i++) {
-    let text = binary[Math.floor(Math.random() * binary.length)];
-    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.95)
-      drops[i] = 0;
-
-    drops[i]++;
-  }
+function Particle() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 1;
+    this.speedX = Math.random() * 1 - 0.5;
+    this.speedY = Math.random() * 1 - 0.5;
 }
 
-setInterval(draw, 33);
+function handleParticles() {
+    for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+
+        p.size = Math.random() * 2 + 1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = "#00ffe7";
+        ctx.fill();
+    }
+}
+
+function animate() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    handleParticles();
+    requestAnimationFrame(animate);
+}
+
+for (let i = 0; i < 150; i++) particles.push(new Particle());
+animate();
