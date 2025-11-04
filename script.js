@@ -1,43 +1,32 @@
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
+const binaryBlock = document.getElementById("binary-block");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-function Particle() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 2 + 1;
-    this.speedX = Math.random() * 1 - 0.5;
-    this.speedY = Math.random() * 1 - 0.5;
-}
-
-function handleParticles() {
-    for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.speedX;
-        p.y += p.speedY;
-
-        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
-
-        p.size = Math.random() * 2 + 1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = "#00ffe7";
-        ctx.fill();
+// Generates 0/1 text block like thevill.github.io
+function generateBinary() {
+    let binaryText = "";
+    for (let i = 0; i < 24; i++) {       // total number of lines
+        binaryText += Array(35)         // length of each line
+            .fill(0)
+            .map(() => (Math.random() > 0.5 ? "1" : "0"))
+            .join("") + "\n";
     }
+    return binaryText;
 }
 
-function animate() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    handleParticles();
-    requestAnimationFrame(animate);
+function triggerBinaryEffect() {
+    binaryBlock.classList.remove("fall"); // restart animation
+    binaryBlock.textContent = generateBinary();
+    binaryBlock.style.opacity = 1;
+
+    setTimeout(() => {
+        binaryBlock.classList.add("fall");
+    }, 1500);
 }
 
-for (let i = 0; i < 150; i++) particles.push(new Particle());
-animate();
+// Detect when the binary slide enters view
+const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+        triggerBinaryEffect();
+    }
+}, { threshold: 0.6 });
+
+observer.observe(document.getElementById("binary-slide"));
